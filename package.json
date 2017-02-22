@@ -1,5 +1,5 @@
 {
-  "name": "ldap-utils",
+  "name": "ldap-authorisation",
   "version": "1.0.0",
   "description": "Node LDAP utitilies",
   "main": "index.js",
