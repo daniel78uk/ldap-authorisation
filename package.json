@@ -1,0 +1,21 @@
+{
+  "name": "ldap-utils",
+  "version": "1.0.0",
+  "description": "Node LDAP utitilies",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R nyan tests"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rambda": "^0.5.2",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "express": "^4.14.1",
+    "mocha": "^3.2.0",
+    "supertest": "^3.0.0"
+  }
+}
