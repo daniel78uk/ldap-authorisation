@@ -1,7 +1,11 @@
-const request = require('request');
 const R = require('ramda');
+const group = require('./group');
 
 const getRequestDetails = req => (req.requestId || '') + ' ' + req.username;
+const groupNamesFromLDAP = R.compose(
+  R.map(R.replace(/^[a-zA-Z]+=([^,]+)(,.+)?$/i, '$1')),
+  R.pluck('distinguishedName')
+);
 
 function getUserNameFromRequest(req) {
   const token = req.headers.authorization.split(' ')[1];
@@ -15,16 +19,15 @@ const getGroups = (apiHost, logger) => (req, res, next) => {
     const requestDetails = getRequestDetails(req);
     logger.info(requestDetails + ' Getting groups for user', req.username)
     if (req.username) {
-      request({ url: `${apiHost}/users/${req.username}/groups`, json: true }, function (error, response, body) {
-        if (error || response.statusCode !== 200) {
+      group.getGroups(req.username, logger)
+        .then(groups => {
+          req.groups = groupNamesFromLDAP(groups);
+          next();
+        })
+        .catch(error => {
           logger.error(requestDetails + ' Error getting groups for user', error)
           res.sendStatus(401);
-        } else {
-          const groups = R.pluck('distinguishedName', body)
-          req.groups = groups;
-          next();
-        }
-      });
+        });
     } else {
       logger.info(req.requestId + ' Request made with no user in token')
       res.sendStatus(401);
