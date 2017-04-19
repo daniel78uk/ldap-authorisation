@@ -13,7 +13,7 @@ const authLogger = {
   error: () => ''
 };
 
-app.use(auth.getGroups('', authLogger));
+app.use(auth.getGroups(authLogger));
 
 app.use(auth.inGroups(['Water'], authLogger));
 

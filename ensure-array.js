@@ -1,7 +1,8 @@
 'use strict';
 
-// [String] || String -> [String]
-const toArray = i => Array.isArray(i) ? i : [i];
+const R = require('ramda');
+
+const toArray = R.unless(R.is(Array), R.of);
 
 module.exports = {
   toArray

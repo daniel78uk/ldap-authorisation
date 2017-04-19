@@ -13,7 +13,7 @@ function getUserNameFromRequest(req) {
   return tokenString.split(':')[0];
 }
 
-const getGroups = (apiHost, logger) => (req, res, next) => {
+const getGroups = logger => (req, res, next) => {
   if (req.headers.authorization) {
     req.username = getUserNameFromRequest(req);
     const requestDetails = getRequestDetails(req);
@@ -50,24 +50,10 @@ const inGroups = (groups, logger) => (req, res, next) => {
   }
 };
 
-const addHeadersToReq = logger => (req, res, next) => {
-  req.groups = req.headers.groups;
-  req.username = req.headers.user;
-  if (req.groups && req.username) {
-    const requestDetails = getRequestDetails(req);
-    logger.info(requestDetails + ' User details found');
-    next();
-  } else {
-    logger.info(req.requestId + ' User details not found, access denied');
-    res.sendStatus(401);
-  }
-};
-
 const getHeaders = req => ({ user: req.username, groups: req.groups })
 
 module.exports = {
   getGroups,
   inGroups,
-  getHeaders,
-  addHeadersToReq
+  getHeaders
 };
