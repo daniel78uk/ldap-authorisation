@@ -3,16 +3,11 @@ language: node_js
 node_js:
   - "7"
 
-cache:
-  yarn: true
-  directories:
-    - node_modules
-
 before-script:
-- yarn install
+- npm install
 
 script:
-- yarn test
+- npm test
 
 notifications:
   email: false
