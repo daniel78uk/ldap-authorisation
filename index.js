@@ -26,15 +26,15 @@ const getGroups = logger => (req, res, next) => {
         })
         .catch(error => {
           logger.error(requestDetails + ' Error getting groups for user', error)
-          res.sendStatus(401);
+          res.status(401).json('Unauthorized')
         });
     } else {
       logger.info(req.requestId + ' Request made with no user in token')
-      res.sendStatus(401);
+      res.status(401).json('Unauthorized')
     }
   } else {
     logger.info(req.requestId + ' Request made with no authorization token')
-    res.sendStatus(401);
+    res.status(401).json('Unauthorized')
   }
 };
 
@@ -46,7 +46,7 @@ const inGroups = (groups, logger) => (req, res, next) => {
     next();
   } else {
     logger.info(requestDetails + ' User access denied', req.username)
-    res.sendStatus(401);
+    res.status(401).json('Unauthorized')
   }
 };
 

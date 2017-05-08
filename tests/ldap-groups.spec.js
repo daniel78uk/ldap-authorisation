@@ -23,6 +23,7 @@ describe('Get groups', () => {
 	it('should authenticate user with correct header', () => {
 		return makeReq.get('/test', { authorization: scottsEncodedHeader })
 			.then(res => {
+				assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
 				assert.equal(res.status, 200);
 				assert.deepEqual(res.body.status, 'OK');
 			});
@@ -31,6 +32,7 @@ describe('Get groups', () => {
 	it('should attach groups to request', () => {
 		return makeReq.get('/return-request-groups', { authorization: scottsEncodedHeader })
 			.then(res => {
+				assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
 				assert.equal(res.status, 200);
 				assert.deepEqual(res.body, ['Water', 'Fire', 'Ice']);
 			});
@@ -38,21 +40,25 @@ describe('Get groups', () => {
 
 	it('should not authenticate user with incorrect header', () => {
 		return makeReq.get('/test', { authorization: 'Basic xxxxx' })
-			.then(res => {
-				assert.equal(true, false);
-			})
-			.catch(res => {
+			.then(() => {
+				assert.fail(true, false, 'Promise should reject, not resolve.');
+			}, res => {
+				res = res.response
+				assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
 				assert.equal(res.status, 401);
+				assert.equal(res.body, 'Unauthorized');
 			});
 	});
 
 	it('should not authenticate user with no header', () => {
 		return makeReq.get('/test', {})
-			.then(res => {
-				assert.equal(true, false);
-			})
-			.catch(res => {
+			.then(() => {
+				assert.fail(true, false, 'Promise should reject, not resolve.');
+			}, res => {
+				res = res.response
+				assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
 				assert.equal(res.status, 401);
+				assert.equal(res.body, 'Unauthorized');
 			});
 	});
 
