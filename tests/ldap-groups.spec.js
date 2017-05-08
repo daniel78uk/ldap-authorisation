@@ -13,6 +13,7 @@ const mockLDAPServer = require('./mock-ldap-server');
 const app = require('./testapp/app');
 
 const scottsEncodedHeader = 'Basic c2NvdHRzOk5PUEFTU1dPUkQ=';
+const errorEncodedHeader = 'Basic ZXJyb3I6Tk9QQVNTV09SRA==';
 
 describe('Get groups', () => {
 
@@ -52,6 +53,18 @@ describe('Get groups', () => {
 
 	it('should not authenticate user with no header', () => {
 		return makeReq.get('/test', {})
+			.then(() => {
+				assert.fail(true, false, 'Promise should reject, not resolve.');
+			}, res => {
+				res = res.response
+				assert.equal(res.headers['content-type'], 'application/json; charset=utf-8')
+				assert.equal(res.status, 401);
+				assert.equal(res.body, 'Unauthorized');
+			});
+	});
+
+	it('should not authenticate user on ldap error', () => {
+		return makeReq.get('/test', { authorization: errorEncodedHeader })
 			.then(() => {
 				assert.fail(true, false, 'Promise should reject, not resolve.');
 			}, res => {

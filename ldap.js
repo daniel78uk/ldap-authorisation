@@ -83,6 +83,7 @@ function getUser(username, logger) {
               });
             }
           });
+          reject(err)
         });
 
         // search did end

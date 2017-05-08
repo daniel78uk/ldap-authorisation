@@ -50,6 +50,10 @@ server.search('o=test', function(req, res, next) {
 	};
 	const username = req.filter.value;
 
+	if (username === 'error') {
+		next(new ldap.NoSuchObjectError());
+	}
+
 	if (obj[username]) {
 		res.send(obj[username]);
 	}
